@@ -215,7 +215,7 @@ cmd_usage() {
 	        List passwords.
 	    $PROGRAM find pass-names...
 	    	List passwords that match pass-names.
-	    $PROGRAM [show] [--clip,-c] pass-name
+	    $PROGRAM [show] [--clip,-c] [--tail,-t] pass-name
 	        Show existing password and optionally put it on the clipboard.
 	        If put on the clipboard, it will be cleared in $CLIP_TIME seconds.
 	    $PROGRAM grep search-string
@@ -301,13 +301,15 @@ cmd_init() {
 
 cmd_show() {
 	local clip=0
+	local tail=0
 
 	local opts
-	opts="$($GETOPT -o c -l clip -n "$PROGRAM" -- "$@")"
+	opts="$($GETOPT -o "ct" -l "clip,tail" -n "$PROGRAM" -- "$@")"
 	local err=$?
 	eval set -- "$opts"
 	while true; do case $1 in
 		-c|--clip) clip=1; shift ;;
+		-t|--tail) tail=1; shift ;;
 		--) shift; break ;;
 	esac done
 
@@ -321,11 +323,20 @@ cmd_show() {
 	check_sneaky_paths "$path"
 	if [[ -f $passfile ]]; then
 		if [[ $clip -eq 0 ]]; then
-			exec $GPG -d $GPG_OPTS "$passfile"
+			if [[ $tail -eq 0 ]]; then
+				exec gpg2 -d $GPG_OPTS "$passfile"
+			else
+				exec gpg2 -d $GPG_OPTS "$passfile" | tail -n +2
+			fi
 		else
 			local pass="$($GPG -d $GPG_OPTS "$passfile" | head -n 1)"
 			[[ -n $pass ]] || exit 1
-			clip "$pass" "$path"
+			gpg2 -d $GPG_OPTS "$passfile" | {
+				read -r pass
+				[[ -n $pass ]] || exit 1
+				clip "$pass" "$path"
+				[[ $tail -eq 1 ]] && cat ;
+			}
 		fi
 	elif [[ -d $PREFIX/$path ]]; then
 		if [[ -z $path ]]; then

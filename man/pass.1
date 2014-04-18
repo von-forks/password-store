@@ -86,12 +86,13 @@ List names of passwords inside the tree that match \fIpass-names\fP by using the
 .BR tree (1)
 program. This command is alternatively named \fBsearch\fP.
 .TP
-\fBshow\fP [ \fI--clip\fP, \fI-c\fP ] \fIpass-name\fP
+\fBshow\fP [ \fI--clip\fP, \fI-c\fP ] [ \fI--tail\fP, \fI-t\fP ] \fIpass-name\fP
 Decrypt and print a password named \fIpass-name\fP. If \fI--clip\fP or \fI-c\fP
 is specified, do not print the password but instead copy the first line to the
 clipboard using
 .BR xclip (1)
 and then restore the clipboard after 45 (or \fIPASSWORD_STORE_CLIP_TIME\fP) seconds.
+If \fI--tail\fP or \fI-t\fP is specified, print the second and subsequent lines.
 .TP
 \fBinsert\fP [ \fI--echo\fP, \fI-e\fP | \fI--multiline\fP, \fI-m\fP ] [ \fI--force\fP, \fI-f\fP ] \fIpass-name\fP
 Insert a new password into the password store called \fIpass-name\fP. This will
