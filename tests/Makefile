@@ -8,6 +8,7 @@ $(T):
 	@./$@ $(CGIT_TEST_OPTS)
 
 clean:
-	$(RM) -rf trash
+	$(RM) -rf test-results/
+	$(RM) -rf trash\ directory.*/
 
 .PHONY: $(T) clean
