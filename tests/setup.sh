@@ -40,6 +40,22 @@ pass_init() {
 	echo "Initilization of ${PASSWORD_STORE_DIR} complete."
 }
 
+# check_cred()
+#
+# Check to make sure the given credential looks valid.
+# Meaning it exists and has at least one line.
+#
+# Arguments: <credential name>
+# Returns: 0 if valid looking, 1 otherwise
+check_cred() {
+	[[ "$#" -eq 1 ]] || { echo "$0: Bad arguments" ; return 1 ; }
+	local cred="$1" ; shift ;
+	echo Checking credential ${cred}
+	${PASS} show "$cred" || { echo "Credential ${cred} does not exist" ; return 1 ; }
+	line_count=$(${PASS} show "$cred" | wc -l)
+	[[ "$line_count" -gt 0 ]] || { echo "Credential ${cred} empty" ; return 1 ; }
+}
+	
 
 # Initialize the test harness
 . ./sharness.sh
