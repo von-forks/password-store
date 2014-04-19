@@ -78,17 +78,45 @@ check_no_cred() {
 
 # create_cred()
 #
-# Create a credential with the given name.
+# Create a credential with the given name and, optionally, password.
+# Credential must not already exist.
 #
-# Arguments: <credential name>
+# Arguments: <credential name> [<password>]
 # Returns: 0 on success, 1 otherwise.
 create_cred() {
-	[[ "$#" -eq 1 ]] || { echo "$0: Bad arguments" ; return 1 ; }
+	[[ "$#" -gt 0 && "$#" -lt 3 ]] || { echo "$0: Bad arguments" ; return 1 ; }
 	local cred="$1" ; shift ;
-	${PASS} generate "${cred}" 24 > /dev/null || { echo "Failed to create credential ${cred}" ; return 1 ; }
+	echo "Creating credential ${cred}"
+	check_no_cred "$cred" || { echo "Credential already exists" ; return 1 ; }
+	if [[ "$#" -eq 1 ]]; then
+		local password="$1" ; shift ;
+		echo "Using password \"$password\" for $cred"
+		# TODO: Working around bug with 'pass insert' returning non-zero.
+		#       Fix this code to exit on error when that is fixed.
+		echo "$password" | ${PASS} insert -e "$cred" || true
+	else
+		echo "Generating random password for $cred"
+		${PASS} generate "${cred}" 24 > /dev/null || { echo "Failed to create credential ${cred}" ; return 1 ; }
+	fi
 	return 0
 }
-	
+
+# verify_password()
+#
+# Verify a given credential exists and has the given password.
+#
+# Arguments: <credential name> <password>
+# Returns: 0 on success, 1 otherwise.
+verify_password() {
+	[[ "$#" -eq 2 ]] || { echo "$0: Bad arguments" ; return 1 ; }
+	local cred="$1" ; shift ;
+	local expected="$1" ; shift ;
+	echo "Verifing credential ${cred} has password \"${expected}\""
+	check_cred "$cred" || return 1
+	${PASS} show "$TEST_CRED" | sed -n 1p > verify-password-actual &&
+	echo "$expected" > verify-password-expected &&
+	test_cmp verify-password-expected verify-password-actual
+}
 
 # Initialize the test harness
 . ./sharness.sh
