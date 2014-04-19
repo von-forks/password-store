@@ -31,6 +31,8 @@ pass_init() {
 	export PASSWORD_STORE_DIR=${SHARNESS_TRASH_DIRECTORY}/test-store/
 	echo "Initializing test password store (${PASSWORD_STORE_DIR}) with key ${PASSWORD_STORE_KEY}"
 
+	[[ -d "${PASSWORD_STORE_DIR}" ]] || rm -rf ${PASSWORD_STORE_DIR}
+
 	# This curently returns non-zero for unknown reasons.
 	# Only happens with stdin set to /dev/null.
 	# I suspect the agent check.
