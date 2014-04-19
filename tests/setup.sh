@@ -5,6 +5,16 @@
 #   ${PASS}      Full path to password-store script to test.
 #   ${PASSWORD_STORE_KEY}  GPG key id of testing key
 
+#
+# Constants
+
+# Fake editor to change password and the password it changes to
+readonly FAKE_EDITOR_PASSWORD_CHANGE=$( echo $(pwd)/fake-editor-change-password.sh )
+readonly FAKE_EDITOR_PASSWORD="Hello World"  # Must match above script
+
+#
+# Find the pass script
+
 readonly PASS=$( cd ../ ; echo $(pwd)/pass ; )
 
 if test -e ${PASS} ; then
