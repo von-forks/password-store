@@ -17,7 +17,7 @@ pass: src/password-store.sh $(DESTDIR)$(LIBDIR)/password-store.platform.sh
 else
 pass: src/password-store.sh
 	cp src/password-store.sh pass
-	@chmod 0755 pass"
+	@chmod 0755 pass
 endif
 
 install-common:
