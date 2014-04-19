@@ -6,11 +6,10 @@ test_description='Test insert'
 export TEST_CRED="test_cred"
 export TEST_PASSWORD="Hello world"
 
-# This fails because 'pass insert' doesn't realize stdin is not
-# interactive and requests the password twice to verify it.
+# Exposes some bug with 'insert -e' returning non-zero despite working.
 test_expect_failure 'Test "insert" command' '
 	pass_init &&
-	echo "TEST_PASSWORD" | ${PASS} insert "$TEST_CRED" &&
+	echo "TEST_PASSWORD" | ${PASS} insert -e "$TEST_CRED" &&
 	check_cred "$TEST_CRED" &&
 	${PASS} show "$TEST_CRED" > from-insert &&
 	echo "$TEST_PASSWORD" > expected &&
