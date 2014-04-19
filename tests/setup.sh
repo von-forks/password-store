@@ -18,6 +18,7 @@ fi
 # Where the test keyring and test key id
 # Note: the assumption is the test key is unencrypted.
 export GNUPGHOME=$(pwd)"/gnupg/"
+chmod 700 "$GNUPGHOME"
 export PASSWORD_STORE_KEY=3DEEA12D  # "Password-store Test Key"
 
 # Initialize a password store, setting PASSWORD_STORE_DIR
