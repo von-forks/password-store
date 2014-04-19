@@ -21,7 +21,12 @@ export GNUPGHOME=$(pwd)"/gnupg/"
 chmod 700 "$GNUPGHOME"
 export PASSWORD_STORE_KEY=3DEEA12D  # "Password-store Test Key"
 
+# pass_init()
+#
 # Initialize a password store, setting PASSWORD_STORE_DIR
+#
+# Arguments: None
+# Returns: Nothing, sets PASSWORD_STORE_DIR
 pass_init() {
 	export PASSWORD_STORE_DIR=${SHARNESS_TRASH_DIRECTORY}/test-store/
 	echo "Initializing test password store (${PASSWORD_STORE_DIR}) with key ${PASSWORD_STORE_KEY}"
