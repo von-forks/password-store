@@ -1,2 +1,3 @@
 tests/test-results/
 tests/trash directory.*
+tests/gnupg/random_seed
