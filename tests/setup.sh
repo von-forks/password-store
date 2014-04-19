@@ -3,12 +3,12 @@
 # This scripts sets the following:
 #   ${PASS}      Full path to password-store script to test.
 
-readonly PASS=$( cd ../src/ ; echo $(pwd)/password-store.sh ; )
+readonly PASS=$( cd ../ ; echo $(pwd)/pass ; )
 
 if test -e ${PASS} ; then
 	echo "pass is ${PASS}"
 else
-	echo "Could not find password-store.sh"
+	echo "Could not find 'pass' script. Did you run make?"
 	exit 1
 fi
 
