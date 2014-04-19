@@ -58,6 +58,35 @@ check_cred() {
 	[[ "$line_count" -gt 0 ]] || { echo "Credential ${cred} empty" ; return 1 ; }
 }
 	
+# check_no_cred()
+#
+# Check to make sure the given credential does not exist.
+# Use to validate removal, moving, etc.
+#
+# Arguments: <credential name>
+# Returns: 0 if credential does not exist, 1 otherwise
+check_no_cred() {
+	[[ "$#" -eq 1 ]] || { echo "$0: Bad arguments" ; return 1 ; }
+	local cred="$1" ; shift ;
+	echo Checking for lack of credential ${cred}
+	${PASS} show "$cred" || return 0 
+	echo "Credential ${cred} exists."
+	return 1
+}
+
+# create_cred()
+#
+# Create a credential with the given name.
+#
+# Arguments: <credential name>
+# Returns: 0 on success, 1 otherwise.
+create_cred() {
+	[[ "$#" -eq 1 ]] || { echo "$0: Bad arguments" ; return 1 ; }
+	local cred="$1" ; shift ;
+	${PASS} generate "${cred}" 24 > /dev/null || { echo "Failed to create credential ${cred}" ; return 1 ; }
+	return 0
+}
+	
 
 # Initialize the test harness
 . ./sharness.sh
