@@ -15,12 +15,12 @@ readonly FAKE_EDITOR_PASSWORD="Hello World"  # Must match above script
 #
 # Find the pass script
 
-readonly PASS=$( cd ../ ; echo $(pwd)/pass ; )
+readonly PASS=$( cd ../src/ ; echo $(pwd)/password-store.sh ; )
 
 if test -e ${PASS} ; then
 	echo "pass is ${PASS}"
 else
-	echo "Could not find 'pass' script. Did you run make?"
+	echo "Could not find password-store.sh"
 	exit 1
 fi
 
