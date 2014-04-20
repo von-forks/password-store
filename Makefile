@@ -36,10 +36,7 @@ endif
 uninstall:
 	@rm -vf "$(DESTDIR)$(BINDIR)/pass" "$(DESTDIR)$(MANDIR)/man1/pass.1" "$(DESTDIR)$(PREFIX)/share/bash-completion/completions/password-store" "$(DESTDIR)$(LIBDIR)/password-store.platform.sh"
 
-tests: pass
+tests:
 	@cd tests/ && make
 
-clean:
-	@rm -f pass
-
-.PHONY: tests clean
+.PHONY: tests
