@@ -8,17 +8,8 @@ PLATFORMFILE := src/platform/$(shell uname | cut -d _ -f 1 | tr '[:upper:]' '[:l
 
 .PHONY: install uninstall install-common
 
-all: pass
-
-ifneq ($(strip $(wildcard $(PLATFORMFILE))),)
-pass: src/password-store.sh $(DESTDIR)$(LIBDIR)/password-store.platform.sh
-	sed 's:.*platform-defined-functions.*:source $(DESTDIR)$(LIBDIR)/password-store.platform.sh:' src/password-store.sh > pass
-	@chmod 0755 pass
-else
-pass: src/password-store.sh
-	cp src/password-store.sh pass
-	@chmod 0755 pass
-endif
+all:
+	@echo "Password store is a shell script, so there is nothing to do. Try \"make install\" instead."
 
 install-common:
 	@mkdir -p "$(DESTDIR)$(BINDIR)" "$(DESTDIR)$(LIBDIR)" "$(DESTDIR)$(MANDIR)/man1" "$(DESTDIR)$(PREFIX)/share/bash-completion/completions/"
@@ -31,12 +22,19 @@ install-common:
 #	Uncomment to install the fish completion file.
 #	@install -m 0644 -v src/completion/pass.fish-completion "$(DESTDIR)$(PREFIX)/share/fish/completions/pass.fish"
 
-install: install-common pass
-	@install -m 0755 -v src/password-store.sh pass
+ifneq ($(strip $(wildcard $(PLATFORMFILE))),)
+install: install-common
+	@install -m 0644 -v "$(PLATFORMFILE)" "$(DESTDIR)$(LIBDIR)/password-store.platform.sh"
+	@mkdir -p -v "$(DESTDIR)$(BINDIR)/"
+	sed 's:.*platform-defined-functions.*:source $(DESTDIR)$(LIBDIR)/password-store.platform.sh:' src/password-store.sh > "$(DESTDIR)$(BINDIR)/pass"
+	@chmod 0755 "$(DESTDIR)$(BINDIR)/pass"
+else
+install: install-common
+	@install -m 0755 -v src/password-store.sh "$(DESTDIR)$(BINDIR)/pass"
+endif
 
 uninstall:
 	@rm -vf "$(DESTDIR)$(BINDIR)/pass" "$(DESTDIR)$(MANDIR)/man1/pass.1" "$(DESTDIR)$(PREFIX)/share/bash-completion/completions/password-store" "$(DESTDIR)$(LIBDIR)/password-store.platform.sh"
-
 
 tests: pass
 	@cd tests/ && make
