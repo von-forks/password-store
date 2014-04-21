@@ -1,0 +1,9 @@
+password-store test suite
+
+Uses https://github.com/mlafeldt/sharness
+	sharness.sh and aggregate-results.sh come from sharness
+
+To run all tests, run 'make' (or 'make tests' from parent directory)
+
+To debug an individual test, run it directly with '-v', e.g.:
+	% ./t0001-sanity-checks.sh -v
